@@ -2,12 +2,18 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Mission from '$lib/components/sections/Mission.svelte';
+	import ProductShowcase from '$lib/components/sections/ProductShowcase.svelte';
+	import Roadmap from '$lib/components/sections/Roadmap.svelte';
+	import BlogHighlights from '$lib/components/sections/BlogHighlights.svelte';
 </script>
 
 <div class="landing">
 	<NavBar />
 	<Hero />
 	<Mission />
+	<ProductShowcase />
+	<Roadmap />
+	<BlogHighlights />
 </div>
 
 <style>

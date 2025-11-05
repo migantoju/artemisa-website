@@ -291,21 +291,21 @@ const dictionary: Record<Locale, Dictionary> = {
 					title: 'Cómo diseñamos recordatorios que no interrumpen tu día',
 					description:
 						'Compartimos el proceso de investigación con familias que usan Sefone en distintas rutinas.',
-					href: '#',
+					href: '/blog/sefone-reminders',
 					date: '14 Ene 2025'
 				},
 				{
 					title: 'Seguridad ciudadana con empatía como eje',
 					description:
 						'Principios que guían las decisiones de producto de Minervax para crear confianza y colaboración.',
-					href: '#',
+					href: '/blog/minervax-empathy',
 					date: '08 Ene 2025'
 				},
 				{
 					title: 'Nuestro stack tecnológico para lanzar rápido sin perder calidad',
 					description:
 						'Detrás de escena: SvelteKit, infra en Cloudflare y prácticas que nos permiten iterar con foco.',
-					href: '#',
+					href: '/blog/tech-stack-2025',
 					date: '20 Dic 2024'
 				}
 			]
@@ -677,21 +677,21 @@ const dictionary: Record<Locale, Dictionary> = {
 					title: 'Designing reminders that respect your day',
 					description:
 						'A look into our research with families using Sefone across different routines.',
-					href: '#',
+					href: '/blog/sefone-reminders',
 					date: '14 Jan 2025'
 				},
 				{
 					title: 'Empathy as a core pillar for civic safety',
 					description:
 						'Guiding principles behind Minervax product decisions to foster trust and collaboration.',
-					href: '#',
+					href: '/blog/minervax-empathy',
 					date: '08 Jan 2025'
 				},
 				{
 					title: 'Our tech stack to ship fast without losing quality',
 					description:
 						'Behind the scenes: SvelteKit, Cloudflare infrastructure, and practices that keep us focused.',
-					href: '#',
+					href: '/blog/tech-stack-2025',
 					date: '20 Dec 2024'
 				}
 			]

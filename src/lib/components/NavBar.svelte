@@ -140,8 +140,10 @@
 
 	.wordmark {
 		background: linear-gradient(135deg, #f8fbff 0%, rgba(180, 194, 255, 0.85) 100%);
+		background-clip: text;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
+		color: transparent;
 	}
 
 	.spark {

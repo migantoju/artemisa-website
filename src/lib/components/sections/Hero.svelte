@@ -182,8 +182,10 @@
 		line-height: 1.05;
 		margin: 0;
 		background: linear-gradient(135deg, #ffffff 0%, rgba(178, 199, 255, 0.85) 100%);
+		background-clip: text;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
+		color: transparent;
 	}
 
 	.subtitle {

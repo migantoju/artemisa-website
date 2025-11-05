@@ -526,8 +526,8 @@ const dictionary: Record<Locale, Dictionary> = {
           statusBadge: "En desarrollo",
           primaryCta: "Unirme a la beta",
           primaryHref: "#beta",
-          secondaryCta: "Leer el manifiesto",
-          secondaryHref: "#mission",
+          secondaryCta: "Ver roadmap",
+          secondaryHref: "#roadmap",
           imagePlaceholder:
             "https://placehold.co/900x600/png?text=Minervax+Preview",
           imageAlt: "Mockup de Minervax con mapa y alertas",
@@ -964,8 +964,8 @@ const dictionary: Record<Locale, Dictionary> = {
           statusBadge: "Work in progress",
           primaryCta: "Join the beta",
           primaryHref: "#beta",
-          secondaryCta: "Read the manifesto",
-          secondaryHref: "#mission",
+          secondaryCta: "View roadmap",
+          secondaryHref: "#roadmap",
           imagePlaceholder:
             "https://placehold.co/900x600/png?text=Minervax+Preview",
           imageAlt: "Mockup of Minervax showing a map and alerts",

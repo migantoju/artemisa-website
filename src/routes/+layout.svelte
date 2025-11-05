@@ -1,8 +1,16 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import { locale, setLocale, type Locale } from '$lib/i18n';
+	import { locale, setLocale, t, type Dictionary, type Locale } from '$lib/i18n';
+	import { page } from '$app/stores';
 
 	const localeStore = locale;
+const tStore = t;
+const pageStore = page;
+const BASE_URL = 'https://artemisa.dev';
+
+let dict: Dictionary | undefined;
+let canonical = BASE_URL;
+let jsonLd: Record<string, unknown> | null = null;
 
 	const localeOptions: { code: Locale; label: string }[] = [
 		{ code: 'es', label: 'ES' },
@@ -14,6 +22,29 @@
 			setLocale(code);
 		}
 	};
+
+	$: dict = $tStore as Dictionary;
+	$: seoHome = dict?.seo.home;
+	$: canonical = `${BASE_URL}${$pageStore.url.pathname}`.replace(/\/$/, '') || BASE_URL;
+	$: jsonLd = dict
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'Organization',
+				name: 'Artemisa Development',
+				url: BASE_URL,
+				description: dict.seo.home.description,
+				logo: `${BASE_URL}/favicon.svg`,
+				sameAs: [
+					'https://twitter.com/artemisa_dev',
+					'https://www.linkedin.com/company/artemisa-development',
+					'https://instagram.com/artemisa.dev'
+				],
+				brand: {
+					'@type': 'Brand',
+					name: 'Artemisa Development'
+				}
+			}
+		: null;
 </script>
 
 <svelte:head>
@@ -24,6 +55,25 @@
 		rel="stylesheet"
 	/>
 	<link rel="icon" href={favicon} />
+	{#if seoHome}
+		<title>{seoHome.title}</title>
+		<meta name="description" content={seoHome.description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={seoHome.title} />
+		<meta property="og:description" content={seoHome.description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={seoHome.ogImage} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={seoHome.title} />
+		<meta name="twitter:description" content={seoHome.description} />
+		<meta name="twitter:image" content={seoHome.ogImage} />
+		<link rel="canonical" href={canonical} />
+		<link rel="alternate" hreflang="es" href={canonical} />
+		<link rel="alternate" hreflang="en" href={canonical} />
+	{/if}
+	{#if jsonLd}
+		<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+	{/if}
 </svelte:head>
 
 <div class="app-shell" data-locale={$localeStore}>

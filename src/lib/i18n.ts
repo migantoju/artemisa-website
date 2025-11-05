@@ -76,19 +76,25 @@ interface ProjectPageDefinition {
     caption: string;
     items: FaqItem[];
   };
-  cta: {
-    title: string;
-    subtitle: string;
-    button: string;
-    href: string;
-  };
+	cta: {
+		title: string;
+		subtitle: string;
+		button: string;
+		href: string;
+	};
+}
+
+interface SeoEntry {
+	title: string;
+	description: string;
+	ogImage: string;
 }
 
 export interface Dictionary {
-  nav: {
-    home: string;
-    roadmap: string;
-    blog: string;
+	nav: {
+		home: string;
+		roadmap: string;
+		blog: string;
     faq: string;
     contact: string;
     products: string;
@@ -158,16 +164,21 @@ export interface Dictionary {
     emailValue: string;
     socialLabel: string;
   };
-  footer: {
-    tagline: string;
-    rights: string;
-    links: {
-      privacy: string;
-      terms: string;
-    };
-    social: string;
-  };
-  projectPages: Record<ProductKey, ProjectPageDefinition>;
+	footer: {
+		tagline: string;
+		rights: string;
+		links: {
+			privacy: string;
+			terms: string;
+		};
+		social: string;
+	};
+	seo: {
+		home: SeoEntry;
+		sefone: SeoEntry;
+		minervax: SeoEntry;
+	};
+	projectPages: Record<ProductKey, ProjectPageDefinition>;
 }
 
 const dictionary: Record<Locale, Dictionary> = {
@@ -381,6 +392,26 @@ const dictionary: Record<Locale, Dictionary> = {
       },
       social: "Redes",
     },
+    seo: {
+      home: {
+        title: "Artemisa Development | Apps propias de bienestar y seguridad",
+        description:
+          "Creamos Sefone y Minervax, aplicaciones con tecnología accesible y confiable enfocadas en bienestar y seguridad ciudadana.",
+        ogImage: "https://placehold.co/1200x630/png?text=Artemisa+Development",
+      },
+      sefone: {
+        title: "Sefone | Protección solar inteligente para cada día",
+        description:
+          "Sefone ofrece rutinas solares personalizadas, recordatorios inteligentes y datos UV hiperlocales para toda tu familia.",
+        ogImage: "https://placehold.co/1200x630/png?text=Sefone",
+      },
+      minervax: {
+        title: "Minervax | Seguridad ciudadana colaborativa en tiempo real",
+        description:
+          "Minervax conecta alertas verificadas, mapas vivos y protocolos guiados para cuidar a tu comunidad con confianza.",
+        ogImage: "https://placehold.co/1200x630/png?text=Minervax",
+      },
+    },
     projectPages: {
       sefone: {
         hero: {
@@ -495,8 +526,8 @@ const dictionary: Record<Locale, Dictionary> = {
           statusBadge: "En desarrollo",
           primaryCta: "Unirme a la beta",
           primaryHref: "#beta",
-          secondaryCta: "Leer el manifiesto",
-          secondaryHref: "#mission",
+          secondaryCta: "Ver roadmap",
+          secondaryHref: "#roadmap",
           imagePlaceholder:
             "https://placehold.co/900x600/png?text=Minervax+Preview",
           imageAlt: "Mockup de Minervax con mapa y alertas",
@@ -799,6 +830,26 @@ const dictionary: Record<Locale, Dictionary> = {
       },
       social: "Social",
     },
+    seo: {
+      home: {
+        title: "Artemisa Development | Purpose-built wellness and safety apps",
+        description:
+          "We build Sefone and Minervax: our own accessible, trustworthy products focused on everyday wellness and civic safety.",
+        ogImage: "https://placehold.co/1200x630/png?text=Artemisa+Development",
+      },
+      sefone: {
+        title: "Sefone | Smart sun care tailored to your day",
+        description:
+          "Sefone delivers personalized solar routines, smart reminders, and hyperlocal UV insights for you and your family.",
+        ogImage: "https://placehold.co/1200x630/png?text=Sefone",
+      },
+      minervax: {
+        title: "Minervax | Collaborative civic safety in real time",
+        description:
+          "Minervax connects verified alerts, living maps, and guided protocols so communities can stay safe together.",
+        ogImage: "https://placehold.co/1200x630/png?text=Minervax",
+      },
+    },
     projectPages: {
       sefone: {
         hero: {
@@ -913,8 +964,8 @@ const dictionary: Record<Locale, Dictionary> = {
           statusBadge: "Work in progress",
           primaryCta: "Join the beta",
           primaryHref: "#beta",
-          secondaryCta: "Read the manifesto",
-          secondaryHref: "#mission",
+          secondaryCta: "View roadmap",
+          secondaryHref: "#roadmap",
           imagePlaceholder:
             "https://placehold.co/900x600/png?text=Minervax+Preview",
           imageAlt: "Mockup of Minervax showing a map and alerts",

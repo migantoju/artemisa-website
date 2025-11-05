@@ -11,6 +11,7 @@
 	let ctaLabel = '';
 	let currentLocale: Locale = 'es';
 	let menuButtonLabel = 'Abrir menú de navegación';
+	let statusLabel = '';
 
 	const menuLabels: Record<Locale, { open: string; close: string }> = {
 		es: {
@@ -38,8 +39,10 @@
 					{ id: 'blog', href: '#blog', label: dict.nav.blog },
 					{ id: 'faq', href: '#faq', label: dict.nav.faq },
 					{ id: 'contact', href: '#contact', label: dict.nav.contact }
-				];
+			];
 	$: ctaLabel = dict?.cta.button ?? '';
+	$: statusLabel =
+		currentLocale === 'es' ? 'Sitio en construcción — contenido en evolución' : 'Site in progress — evolving content';
 
 	$: currentLocale = ($localeStore as Locale) ?? 'es';
 	$: menuButtonLabel = menuOpen
@@ -47,12 +50,17 @@
 		: menuLabels[currentLocale].open;
 </script>
 
-<nav class="nav" aria-label="Primary">
-	<a class="logo" href="/">
-		<span aria-hidden="true" class="wordmark">Artemisa</span>
-		<span aria-hidden="true" class="spark">•</span>
-		<span aria-hidden="true" class="wordmark">Dev</span>
-		<span class="sr-only">Artemisa Development</span>
+<div class="nav-wrapper">
+	<div class="status-banner" role="note" aria-live="polite">
+		<span class="pulse" aria-hidden="true"></span>
+		<span class="status-text">{statusLabel}</span>
+	</div>
+	<nav class="nav" aria-label="Primary">
+		<a class="logo" href="/">
+			<span aria-hidden="true" class="wordmark">Artemisa</span>
+			<span aria-hidden="true" class="spark">•</span>
+			<span aria-hidden="true" class="wordmark">Dev</span>
+			<span class="sr-only">Artemisa Development</span>
 	</a>
 
 	<div class="nav-items desktop">
@@ -85,7 +93,6 @@
 			transition:fade
 		></button>
 	{/if}
-
 	{#if menuOpen}
 		<div
 			id="mobile-nav"
@@ -106,15 +113,73 @@
 			</div>
 		</div>
 	{/if}
-</nav>
+	</nav>
+</div>
 
 <style>
+	.nav-wrapper {
+		position: sticky;
+		z-index: 820;
+		top: 0.5rem;
+		display: grid;
+		gap: 0.5rem;
+		width: min(92%, 1120px);
+		margin: 0 auto;
+	}
+
+	.status-banner {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.55rem 1rem;
+		border-radius: 999px;
+		background: rgba(14, 20, 38, 0.78);
+		backdrop-filter: blur(14px);
+		border: 1px solid rgba(101, 251, 210, 0.18);
+		box-shadow: 0 12px 28px rgba(6, 10, 22, 0.45);
+		color: rgba(214, 225, 255, 0.78);
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+
+	.pulse {
+		display: inline-flex;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #65fbd2, #36d1ff);
+		position: relative;
+	}
+
+	.pulse::after {
+		content: '';
+		position: absolute;
+		inset: -4px;
+		border-radius: 50%;
+		border: 2px solid rgba(101, 251, 210, 0.35);
+		animation: ping 1.6s ease-out infinite;
+	}
+
+	@keyframes ping {
+		0% {
+			transform: scale(0.6);
+			opacity: 0.9;
+		}
+		100% {
+			transform: scale(1.6);
+			opacity: 0;
+		}
+	}
+
+	.status-text {
+		letter-spacing: 0.04em;
+	}
+
 	.nav {
 		position: sticky;
-		top: 0.75rem;
+		top: 0;
 		z-index: 800;
-		margin: 0 auto;
-		width: min(92%, 1120px);
 		display: grid;
 		grid-template-columns: auto 1fr auto;
 		align-items: center;
@@ -299,6 +364,11 @@
 	}
 
 	@media (max-width: 900px) {
+		.nav-wrapper {
+			width: min(94%, 520px);
+			gap: 0.45rem;
+		}
+
 		.nav {
 			grid-template-columns: auto auto;
 			gap: 0.75rem;
@@ -320,10 +390,13 @@
 	}
 
 	@media (max-width: 520px) {
+		.nav-wrapper {
+			top: 0.35rem;
+		}
+
 		.nav {
-			width: min(94%, 480px);
+			width: 100%;
 			padding: 0.75rem 1rem;
-			top: 0.5rem;
 		}
 	}
 </style>

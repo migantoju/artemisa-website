@@ -2,20 +2,62 @@
 	import ProjectPage from '$lib/components/projects/ProjectPage.svelte';
 	import { t, type Dictionary } from '$lib/i18n';
 
-	const tStore = t;
+const tStore = t;
+const BASE_URL = 'https://artemisa.dev';
+const FALLBACK_OG = 'https://placehold.co/1200x630/png?text=Artemisa+Development';
 
 	let dict: Dictionary | undefined;
 	let hero:
 		| Dictionary['projectPages']['sefone']['hero']
 		| undefined;
+	let seoEntry: Dictionary['seo']['sefone'] | undefined;
+	let productJsonLd: Record<string, unknown> | null = null;
+	const canonical = `${BASE_URL}/sefone`;
 
 	$: dict = $tStore as Dictionary;
 	$: hero = dict?.projectPages.sefone.hero;
+	$: seoEntry = dict?.seo.sefone;
+	$: productJsonLd = seoEntry
+		? {
+			'@context': 'https://schema.org',
+			'@type': 'SoftwareApplication',
+			name: seoEntry.title,
+			applicationCategory: 'HealthApplication',
+			operatingSystem: 'iOS, Android',
+			offers: { '@type': 'Offer', availability: 'https://schema.org/PreOrder' },
+			description: seoEntry.description,
+			image: seoEntry?.ogImage ?? FALLBACK_OG,
+			url: canonical,
+			creator: {
+				'@type': 'Organization',
+				name: 'Artemisa Development',
+				url: BASE_URL
+			}
+		}
+		: null;
 </script>
 
 <svelte:head>
-	<title>{hero?.eyebrow ?? 'Sefone'} | Artemisa Development</title>
-	<meta name="description" content={hero?.subtitle ?? ''} />
+	<title>{seoEntry?.title ?? 'Sefone | Artemisa Development'}</title>
+	<meta name="description" content={seoEntry?.description ?? hero?.subtitle ?? ''} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={seoEntry?.title ?? 'Sefone | Artemisa Development'} />
+	<meta property="og:description" content={seoEntry?.description ?? hero?.subtitle ?? ''} />
+	<meta property="og:url" content={canonical} />
+	<meta property="og:image" content={seoEntry?.ogImage ?? FALLBACK_OG} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={seoEntry?.title ?? 'Sefone | Artemisa Development'} />
+	<meta
+		name="twitter:description"
+		content={seoEntry?.description ?? hero?.subtitle ?? ''}
+	/>
+	<meta name="twitter:image" content={seoEntry?.ogImage ?? FALLBACK_OG} />
+	<link rel="canonical" href={canonical} />
+	<link rel="alternate" hreflang="es" href={canonical} />
+	<link rel="alternate" hreflang="en" href={canonical} />
+	{#if productJsonLd}
+		<script type="application/ld+json">{JSON.stringify(productJsonLd)}</script>
+	{/if}
 </svelte:head>
 
 <ProjectPage project="sefone" />

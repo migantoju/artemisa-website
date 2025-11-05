@@ -109,7 +109,7 @@
 <style>
 	.hero {
 		position: relative;
-		padding: clamp(5rem, 8vw, 8rem) 0 clamp(4rem, 6vw, 6rem);
+		padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(2.5rem, 4.5vw, 4.5rem);
 		overflow: hidden;
 	}
 
@@ -158,15 +158,16 @@
 		margin: 0 auto;
 		display: grid;
 		grid-template-columns: repeat(12, minmax(0, 1fr));
-		gap: clamp(1.5rem, 3vw, 3rem);
-		align-items: center;
+		gap: clamp(1.4rem, 2.6vw, 2.6rem);
+		align-items: start;
 	}
 
 	.copy {
 		grid-column: span 6;
 		display: flex;
 		flex-direction: column;
-		gap: 1.4rem;
+		gap: 1rem;
+		transform: translateY(-1rem);
 	}
 
 	.eyebrow {
@@ -189,9 +190,9 @@
 	}
 
 	.subtitle {
-		font-size: clamp(1.1rem, 2vw, 1.3rem);
+		font-size: clamp(1.05rem, 1.8vw, 1.25rem);
 		max-width: 32ch;
-		color: rgba(224, 231, 255, 0.8);
+		color: rgba(224, 231, 255, 0.82);
 		margin: 0;
 	}
 
@@ -274,11 +275,11 @@
 	}
 
 	.card.available {
-		transform: translateY(-20px) rotate3d(1, -1, 0, 6deg);
+		transform: translateY(-12px) rotate3d(1, -1, 0, 5deg);
 	}
 
 	.card.wip {
-		transform: translateY(20px) rotate3d(1, 1, 0, 6deg);
+		transform: translateY(12px) rotate3d(1, 1, 0, 5deg);
 	}
 
 	.card:hover {
@@ -383,6 +384,7 @@
 		.copy {
 			text-align: center;
 			align-items: center;
+			transform: translateY(0);
 		}
 
 		.subtitle {

@@ -89,6 +89,10 @@
 		text-decoration: underline;
 	}
 
+	:global(html) {
+		scroll-behavior: smooth;
+	}
+
 	.app-shell {
 		min-height: 100vh;
 		display: flex;

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { t, type Dictionary } from '$lib/i18n';
-    import MinervaxBeta from '$lib/components/sections/MinervaxBeta.svelte';
+		import MinervaxBeta from '$lib/components/sections/MinervaxBeta.svelte';
+		import SefoneWaitlist from '$lib/components/sections/SefoneWaitlist.svelte';
 
     export let project: 'sefone' | 'minervax';
 
@@ -118,6 +119,10 @@
                 <a class="primary" href={data.cta.href}>{data.cta.button}</a>
             </div>
         </section>
+
+        {#if project === 'sefone'}
+            <SefoneWaitlist />
+        {/if}
 
         {#if project === 'minervax'}
             <MinervaxBeta />

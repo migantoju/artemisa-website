@@ -13,7 +13,8 @@
 
 {#if blog}
 	<section class="blog" id="blog" aria-labelledby="blog-title">
-		<div class="gradient" aria-hidden="true"></div>
+		<div class="glow glow-one" aria-hidden="true"></div>
+		<div class="glow glow-two" aria-hidden="true"></div>
 
 		<div class="blog-header">
 			<div class="heading">
@@ -54,20 +55,41 @@
 		margin: 0 auto;
 		display: grid;
 		gap: clamp(2rem, 4vw, 3rem);
-		padding: clamp(3rem, 6vw, 4.5rem) 0;
+		padding: clamp(3rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+		border-radius: 40px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.07);
+		background: rgba(8, 12, 24, 0.74);
+		box-shadow: 0 18px 48px rgba(6, 10, 26, 0.45);
 	}
 
-	.gradient {
+	.glow {
 		position: absolute;
-		inset: 0 0 -20% 0;
-		background: radial-gradient(circle at top left, rgba(98, 123, 255, 0.22), transparent 65%),
-			radial-gradient(circle at bottom right, rgba(101, 251, 210, 0.18), transparent 60%);
-		filter: blur(0);
+		width: clamp(260px, 40vw, 360px);
+		height: clamp(260px, 40vw, 360px);
+		border-radius: 50%;
+		filter: blur(140px);
+		opacity: 0.5;
 		pointer-events: none;
+	}
+
+	.glow-one {
+		top: 0;
+		left: 0;
+		transform: translate(-45%, -55%);
+		background: radial-gradient(circle, rgba(98, 123, 255, 0.45), transparent 65%);
+	}
+
+	.glow-two {
+		bottom: 0;
+		right: 0;
+		transform: translate(35%, 45%);
+		background: radial-gradient(circle, rgba(101, 251, 210, 0.35), transparent 65%);
 	}
 
 	.blog-header {
 		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
@@ -118,6 +140,7 @@
 
 	.posts {
 		position: relative;
+		z-index: 1;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 		gap: clamp(1.5rem, 3vw, 2.1rem);

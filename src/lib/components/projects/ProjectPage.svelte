@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { t, type Dictionary } from '$lib/i18n';
+    import { t, type Dictionary } from '$lib/i18n';
+    import MinervaxBeta from '$lib/components/sections/MinervaxBeta.svelte';
 
-	export let project: 'sefone' | 'minervax';
+    export let project: 'sefone' | 'minervax';
 
-	const tStore = t;
+    const tStore = t;
 
-	let dict: Dictionary | undefined;
-	let data: Dictionary['projectPages'][typeof project] | undefined;
+    let dict: Dictionary | undefined;
+    let data: Dictionary['projectPages'][typeof project] | undefined;
 
-	$: dict = $tStore as Dictionary;
-	$: data = dict?.projectPages[project];
+    $: dict = $tStore as Dictionary;
+    $: data = dict?.projectPages[project];
 </script>
 
 {#if data}
@@ -110,14 +111,18 @@
 			</div>
 		</section>
 
-		<section class="cta">
-			<div class="cta-inner">
-				<h2>{data.cta.title}</h2>
-				<p>{data.cta.subtitle}</p>
-				<a class="primary" href={data.cta.href}>{data.cta.button}</a>
-			</div>
-		</section>
-	</div>
+        <section class="cta">
+            <div class="cta-inner">
+                <h2>{data.cta.title}</h2>
+                <p>{data.cta.subtitle}</p>
+                <a class="primary" href={data.cta.href}>{data.cta.button}</a>
+            </div>
+        </section>
+
+        {#if project === 'minervax'}
+            <MinervaxBeta />
+        {/if}
+    </div>
 {/if}
 
 <style>

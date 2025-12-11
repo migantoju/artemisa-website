@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
-	import { locale, t, type Dictionary, type Locale } from '$lib/i18n';
+	import { fade, fly } from "svelte/transition";
+	import { locale, t, type Dictionary, type Locale } from "$lib/i18n";
+	import LogoMark from "$lib/components/logo/LogoMark.svelte";
 
 	const localeStore = locale;
 	const tStore = t;
@@ -8,20 +9,20 @@
 	let menuOpen = false;
 	let dict: Dictionary | undefined;
 	let links: { id: string; href: string; label: string }[] = [];
-	let ctaLabel = '';
-	let currentLocale: Locale = 'es';
-	let menuButtonLabel = 'Abrir menú de navegación';
-	let statusLabel = '';
+	let ctaLabel = "";
+	let currentLocale: Locale = "es";
+	let menuButtonLabel = "Abrir menú de navegación";
+	let statusLabel = "";
 
 	const menuLabels: Record<Locale, { open: string; close: string }> = {
 		es: {
-			open: 'Abrir menú de navegación',
-			close: 'Cerrar menú de navegación'
+			open: "Abrir menú de navegación",
+			close: "Cerrar menú de navegación",
 		},
 		en: {
-			open: 'Open navigation menu',
-			close: 'Close navigation menu'
-		}
+			open: "Open navigation menu",
+			close: "Close navigation menu",
+		},
 	};
 
 	const handleLinkClick = () => {
@@ -33,18 +34,32 @@
 		dict === undefined
 			? []
 			: [
-					{ id: 'home', href: '#top', label: dict.nav.home },
-					{ id: 'products', href: '#products', label: dict.nav.products },
-					{ id: 'roadmap', href: '#roadmap', label: dict.nav.roadmap },
-					{ id: 'blog', href: '#blog', label: dict.nav.blog },
-					{ id: 'faq', href: '#faq', label: dict.nav.faq },
-					{ id: 'contact', href: '#contact', label: dict.nav.contact }
-			];
-	$: ctaLabel = dict?.cta.button ?? '';
+					{ id: "home", href: "#top", label: dict.nav.home },
+					{
+						id: "products",
+						href: "#products",
+						label: dict.nav.products,
+					},
+					{
+						id: "roadmap",
+						href: "#roadmap",
+						label: dict.nav.roadmap,
+					},
+					{ id: "blog", href: "#blog", label: dict.nav.blog },
+					{ id: "faq", href: "#faq", label: dict.nav.faq },
+					{
+						id: "contact",
+						href: "#contact",
+						label: dict.nav.contact,
+					},
+				];
+	$: ctaLabel = dict?.cta.button ?? "";
 	$: statusLabel =
-		currentLocale === 'es' ? 'Sitio en construcción — contenido en evolución' : 'Site in progress — evolving content';
+		currentLocale === "es"
+			? "Sitio en construcción — contenido en evolución"
+			: "Site in progress — evolving content";
 
-	$: currentLocale = ($localeStore as Locale) ?? 'es';
+	$: currentLocale = ($localeStore as Locale) ?? "es";
 	$: menuButtonLabel = menuOpen
 		? menuLabels[currentLocale].close
 		: menuLabels[currentLocale].open;
@@ -56,63 +71,62 @@
 		<span class="status-text">{statusLabel}</span>
 	</div>
 	<nav class="nav" aria-label="Primary">
-		<a class="logo" href="/">
-			<span aria-hidden="true" class="wordmark">Artemisa</span>
-			<span aria-hidden="true" class="spark">•</span>
-			<span aria-hidden="true" class="wordmark">Dev</span>
-			<span class="sr-only">Artemisa Development</span>
-	</a>
+		<LogoMark href="/" variant="full" />
 
-	<div class="nav-items desktop">
-		{#each links as link}
-			<a href={link.href} class="nav-link">{link.label}</a>
-		{/each}
-	</div>
+		<div class="nav-items desktop">
+			{#each links as link}
+				<a href={link.href} class="nav-link">{link.label}</a>
+			{/each}
+		</div>
 
-	<a class="cta desktop" href="#updates">{ctaLabel}</a>
+		<a class="cta desktop" href="#updates">{ctaLabel}</a>
 
-	<button
-		type="button"
-		class="menu-toggle"
-		on:click={() => (menuOpen = !menuOpen)}
-		aria-expanded={menuOpen}
-		aria-controls="mobile-nav"
-		aria-label={menuButtonLabel}
-	>
-		<span class:open={menuOpen}></span>
-		<span class:open={menuOpen}></span>
-		<span class:open={menuOpen}></span>
-	</button>
-
-	{#if menuOpen}
 		<button
 			type="button"
-			class="backdrop"
-			on:click={handleLinkClick}
-			aria-label={menuLabels[currentLocale].close}
-			transition:fade
-		></button>
-	{/if}
-	{#if menuOpen}
-		<div
-			id="mobile-nav"
-			class="mobile-menu"
-			role="dialog"
-			aria-modal="true"
-			transition:fly={{ y: -16, duration: 180 }}
+			class="menu-toggle"
+			on:click={() => (menuOpen = !menuOpen)}
+			aria-expanded={menuOpen}
+			aria-controls="mobile-nav"
+			aria-label={menuButtonLabel}
 		>
-			<div class="mobile-inner">
-				{#each links as link}
-					<a href={link.href} class="nav-link" on:click={handleLinkClick}>
-						{link.label}
+			<span class:open={menuOpen}></span>
+			<span class:open={menuOpen}></span>
+			<span class:open={menuOpen}></span>
+		</button>
+
+		{#if menuOpen}
+			<button
+				type="button"
+				class="backdrop"
+				on:click={handleLinkClick}
+				aria-label={menuLabels[currentLocale].close}
+				transition:fade
+			></button>
+		{/if}
+		{#if menuOpen}
+			<div
+				id="mobile-nav"
+				class="mobile-menu"
+				role="dialog"
+				aria-modal="true"
+				transition:fly={{ y: -16, duration: 180 }}
+			>
+				<div class="mobile-inner">
+					{#each links as link}
+						<a
+							href={link.href}
+							class="nav-link"
+							on:click={handleLinkClick}
+						>
+							{link.label}
+						</a>
+					{/each}
+					<a class="cta" href="#updates" on:click={handleLinkClick}>
+						{ctaLabel}
 					</a>
-				{/each}
-				<a class="cta" href="#updates" on:click={handleLinkClick}>
-					{ctaLabel}
-				</a>
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
 	</nav>
 </div>
 
@@ -134,30 +148,32 @@
 		gap: 0.6rem;
 		padding: 0.55rem 1rem;
 		border-radius: 999px;
-		background: rgba(14, 20, 38, 0.78);
+		background: var(--glass-bg);
 		backdrop-filter: blur(14px);
-		border: 1px solid rgba(101, 251, 210, 0.18);
-		box-shadow: 0 12px 28px rgba(6, 10, 22, 0.45);
-		color: rgba(214, 225, 255, 0.78);
+		border: 1px solid var(--glass-border);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+		color: var(--text-muted);
 		font-size: 0.85rem;
 		font-weight: 500;
 	}
 
 	.pulse {
 		display: inline-flex;
-		width: 10px;
-		height: 10px;
+		width: 8px;
+		height: 8px;
 		border-radius: 50%;
-		background: linear-gradient(135deg, #65fbd2, #36d1ff);
+		background: var(--primary);
 		position: relative;
+		box-shadow: 0 0 8px var(--primary-glow);
 	}
 
 	.pulse::after {
-		content: '';
+		content: "";
 		position: absolute;
 		inset: -4px;
 		border-radius: 50%;
-		border: 2px solid rgba(101, 251, 210, 0.35);
+		border: 1px solid var(--primary);
+		opacity: 0.5;
 		animation: ping 1.6s ease-out infinite;
 	}
 
@@ -173,7 +189,7 @@
 	}
 
 	.status-text {
-		letter-spacing: 0.04em;
+		letter-spacing: 0.02em;
 	}
 
 	.nav {
@@ -183,50 +199,13 @@
 		display: grid;
 		grid-template-columns: auto 1fr auto;
 		align-items: center;
-		padding: 0.85rem 1.3rem;
+		padding: 0.75rem 1.25rem;
 		border-radius: 999px;
-		background: rgba(8, 12, 24, 0.68);
-		backdrop-filter: blur(18px);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		box-shadow: 0 18px 40px rgba(6, 10, 22, 0.45);
+		background: rgba(10, 15, 30, 0.75);
+		backdrop-filter: blur(20px);
+		border: 1px solid var(--glass-border);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 		gap: 1rem;
-	}
-
-	.logo {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.3rem;
-		font-size: 1.1rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: #f8fbff;
-	}
-
-	.wordmark {
-		background: linear-gradient(135deg, #f8fbff 0%, rgba(180, 194, 255, 0.85) 100%);
-		background-clip: text;
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		color: transparent;
-	}
-
-	.spark {
-		font-size: 0.9rem;
-		color: #65fbd2;
-		transform: translateY(-1px);
-	}
-
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		border: 0;
-		white-space: nowrap;
 	}
 
 	.nav-items {
@@ -240,25 +219,28 @@
 		position: relative;
 		font-size: 0.95rem;
 		font-weight: 500;
-		color: rgba(240, 243, 255, 0.82);
+		color: var(--text-muted);
 		padding: 0.4rem 0.6rem;
 		transition: color 0.2s ease;
 	}
 
 	.nav-link::after {
-		content: '';
+		content: "";
 		position: absolute;
 		left: 50%;
 		bottom: -0.3rem;
 		width: 0;
 		height: 2px;
-		background: linear-gradient(135deg, #65fbd2, #6a7dff);
+		background: var(--primary);
 		border-radius: 999px;
-		transition: width 0.2s ease, left 0.2s ease;
+		transition:
+			width 0.2s ease,
+			left 0.2s ease;
+		box-shadow: 0 0 8px var(--primary-glow);
 	}
 
 	.nav-link:hover {
-		color: #ffffff;
+		color: var(--text-main);
 	}
 
 	.nav-link:hover::after {
@@ -274,15 +256,17 @@
 		border-radius: 999px;
 		font-weight: 600;
 		font-size: 0.95rem;
-		background: linear-gradient(135deg, #5669ff 0%, #36d1ff 100%);
-		color: #05070f;
-		box-shadow: 0 12px 24px rgba(54, 105, 255, 0.35);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		background: var(--primary);
+		color: #000;
+		box-shadow: 0 0 15px var(--primary-glow);
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
 	}
 
 	.cta:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 14px 28px rgba(86, 130, 255, 0.45);
+		box-shadow: 0 0 25px var(--primary-glow);
 	}
 
 	.desktop {
@@ -292,11 +276,11 @@
 	.menu-toggle {
 		display: none;
 		position: relative;
-		width: 44px;
-		height: 44px;
+		width: 40px;
+		height: 40px;
 		border-radius: 50%;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		background: rgba(12, 16, 32, 0.7);
+		border: 1px solid var(--glass-border);
+		background: rgba(255, 255, 255, 0.05);
 		backdrop-filter: blur(12px);
 		cursor: pointer;
 		align-items: center;
@@ -308,9 +292,11 @@
 		display: block;
 		width: 18px;
 		height: 2px;
-		background: rgba(248, 251, 255, 0.8);
+		background: var(--text-main);
 		border-radius: 1px;
-		transition: transform 0.2s ease, opacity 0.2s ease;
+		transition:
+			transform 0.2s ease,
+			opacity 0.2s ease;
 	}
 
 	.menu-toggle span:nth-child(1).open {
@@ -330,8 +316,8 @@
 		border: none;
 		position: fixed;
 		inset: 0;
-		background: rgba(5, 7, 15, 0.65);
-		backdrop-filter: blur(6px);
+		background: rgba(0, 0, 0, 0.8);
+		backdrop-filter: blur(8px);
 		z-index: 750;
 		cursor: pointer;
 	}
@@ -341,10 +327,10 @@
 		top: 1rem;
 		right: 1rem;
 		left: 1rem;
-		background: rgba(8, 12, 24, 0.95);
-		border: 1px solid rgba(255, 255, 255, 0.06);
+		background: var(--bg-surface);
+		border: 1px solid var(--glass-border);
 		border-radius: 24px;
-		box-shadow: 0 22px 50px rgba(4, 6, 16, 0.6);
+		box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8);
 		padding: 1.4rem;
 		z-index: 900;
 	}
@@ -382,10 +368,6 @@
 		.menu-toggle {
 			display: inline-flex;
 			justify-self: end;
-		}
-
-		.logo {
-			font-size: 1rem;
 		}
 	}
 

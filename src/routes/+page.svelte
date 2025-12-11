@@ -1,16 +1,19 @@
 <script lang="ts">
-	import NavBar from '$lib/components/NavBar.svelte';
-	import Hero from '$lib/components/sections/Hero.svelte';
-	import Mission from '$lib/components/sections/Mission.svelte';
-	import ProductShowcase from '$lib/components/sections/ProductShowcase.svelte';
-	import Roadmap from '$lib/components/sections/Roadmap.svelte';
-	import BlogHighlights from '$lib/components/sections/BlogHighlights.svelte';
-	import FAQ from '$lib/components/sections/FAQ.svelte';
-	import TeamSpotlight from '$lib/components/sections/TeamSpotlight.svelte';
-	import CallToAction from '$lib/components/sections/CallToAction.svelte';
-	import ContactStrip from '$lib/components/sections/ContactStrip.svelte';
-	import FooterBar from '$lib/components/FooterBar.svelte';
+	import NavBar from "$lib/components/NavBar.svelte";
+	import Hero from "$lib/components/sections/Hero.svelte";
+	import Mission from "$lib/components/sections/Mission.svelte";
+	import ProductShowcase from "$lib/components/sections/ProductShowcase.svelte";
+	import Roadmap from "$lib/components/sections/Roadmap.svelte";
+	import BlogHighlights from "$lib/components/sections/BlogHighlights.svelte";
+	import FAQ from "$lib/components/sections/FAQ.svelte";
+	import TeamSpotlight from "$lib/components/sections/TeamSpotlight.svelte";
+	import CallToAction from "$lib/components/sections/CallToAction.svelte";
+	import ContactStrip from "$lib/components/sections/ContactStrip.svelte";
+	import FooterBar from "$lib/components/FooterBar.svelte";
+	import InteractiveBackground from "$lib/components/InteractiveBackground.svelte";
 </script>
+
+<InteractiveBackground />
 
 <div class="landing">
 	<NavBar />
@@ -29,6 +32,8 @@
 
 <style>
 	.landing {
+		position: relative;
+		z-index: 10;
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;

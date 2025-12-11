@@ -1,20 +1,26 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
-	import { locale, setLocale, t, type Dictionary, type Locale } from '$lib/i18n';
-	import { page } from '$app/stores';
+	import favicon from "$lib/assets/favicon.svg";
+	import {
+		locale,
+		setLocale,
+		t,
+		type Dictionary,
+		type Locale,
+	} from "$lib/i18n";
+	import { page } from "$app/stores";
 
 	const localeStore = locale;
-const tStore = t;
-const pageStore = page;
-const BASE_URL = 'https://artemisa.dev';
+	const tStore = t;
+	const pageStore = page;
+	const BASE_URL = "https://artemisa.dev";
 
-let dict: Dictionary | undefined;
-let canonical = BASE_URL;
-let jsonLd: Record<string, unknown> | null = null;
+	let dict: Dictionary | undefined;
+	let canonical = BASE_URL;
+	let jsonLd: Record<string, unknown> | null = null;
 
 	const localeOptions: { code: Locale; label: string }[] = [
-		{ code: 'es', label: 'ES' },
-		{ code: 'en', label: 'EN' }
+		{ code: "es", label: "ES" },
+		{ code: "en", label: "EN" },
 	];
 
 	const handleLocaleChange = (code: Locale) => {
@@ -25,31 +31,36 @@ let jsonLd: Record<string, unknown> | null = null;
 
 	$: dict = $tStore as Dictionary;
 	$: seoHome = dict?.seo.home;
-	$: canonical = `${BASE_URL}${$pageStore.url.pathname}`.replace(/\/$/, '') || BASE_URL;
+	$: canonical =
+		`${BASE_URL}${$pageStore.url.pathname}`.replace(/\/$/, "") || BASE_URL;
 	$: jsonLd = dict
 		? {
-				'@context': 'https://schema.org',
-				'@type': 'Organization',
-				name: 'Artemisa Development',
+				"@context": "https://schema.org",
+				"@type": "Organization",
+				name: "Artemisa Development",
 				url: BASE_URL,
 				description: dict.seo.home.description,
 				logo: `${BASE_URL}/favicon.svg`,
 				sameAs: [
-					'https://twitter.com/artemisa_dev',
-					'https://www.linkedin.com/company/artemisa-development',
-					'https://instagram.com/artemisa.dev'
+					"https://twitter.com/artemisa_dev",
+					"https://www.linkedin.com/company/artemisa-development",
+					"https://instagram.com/artemisa.dev",
 				],
 				brand: {
-					'@type': 'Brand',
-					name: 'Artemisa Development'
-				}
+					"@type": "Brand",
+					name: "Artemisa Development",
+				},
 			}
 		: null;
 </script>
 
 <svelte:head>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		rel="preconnect"
+		href="https://fonts.gstatic.com"
+		crossorigin="anonymous"
+	/>
 	<link
 		href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
 		rel="stylesheet"
@@ -72,13 +83,19 @@ let jsonLd: Record<string, unknown> | null = null;
 		<link rel="alternate" hreflang="en" href={canonical} />
 	{/if}
 	{#if jsonLd}
-		<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+		<script type="application/ld+json">
+{JSON.stringify(jsonLd)}
+		</script>
 	{/if}
 </svelte:head>
 
 <div class="app-shell" data-locale={$localeStore}>
 	<div class="skip-link">
-		<a href="#main">{$localeStore === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+		<a href="#main"
+			>{$localeStore === "es"
+				? "Saltar al contenido"
+				: "Skip to content"}</a
+		>
 	</div>
 	<div class="language-switch">
 		{#each localeOptions as option}
@@ -86,7 +103,9 @@ let jsonLd: Record<string, unknown> | null = null;
 				type="button"
 				class:active={$localeStore === option.code}
 				on:click={() => handleLocaleChange(option.code)}
-				aria-label={option.code === 'es' ? 'Cambiar a español' : 'Switch to English'}
+				aria-label={option.code === "es"
+					? "Cambiar a español"
+					: "Switch to English"}
 			>
 				{option.label}
 			</button>
@@ -99,7 +118,18 @@ let jsonLd: Record<string, unknown> | null = null;
 
 <style>
 	:global(:root) {
-		color-scheme: dark light;
+		color-scheme: dark;
+		--bg-depth: #02040a;
+		--bg-surface: #0a0f1e;
+		--primary: #00f0ff;
+		--primary-glow: rgba(0, 240, 255, 0.4);
+		--secondary: #7000ff;
+		--secondary-glow: rgba(112, 0, 255, 0.4);
+		--text-main: #f0f4f8;
+		--text-muted: #94a3b8;
+		--glass-border: rgba(255, 255, 255, 0.08);
+		--glass-bg: rgba(10, 15, 30, 0.6);
+		--font-main: "DM Sans", "Inter", system-ui, sans-serif;
 	}
 
 	:global(*),
@@ -112,70 +142,88 @@ let jsonLd: Record<string, unknown> | null = null;
 	:global(body) {
 		margin: 0;
 		padding: 0;
-		font-family:
-			'DM Sans',
-			'Inter',
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			sans-serif;
-		background-color: #05070f;
-		color: #f8fbff;
+		font-family: var(--font-main);
+		background-color: var(--bg-depth);
+		color: var(--text-main);
 		min-height: 100%;
+		overflow-x: hidden;
 	}
 
 	:global(body) {
 		display: flex;
 		flex-direction: column;
+		-webkit-font-smoothing: antialiased;
 	}
 
 	:global(a) {
 		color: inherit;
 		text-decoration: none;
+		transition: color 0.2s ease;
 	}
 
 	:global(a:hover) {
-		text-decoration: underline;
+		color: var(--primary);
+	}
+
+	:global(h1, h2, h3, h4, h5, h6) {
+		margin: 0;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+	}
+
+	:global(p) {
+		margin: 0;
+		line-height: 1.6;
+		color: var(--text-muted);
 	}
 
 	:global(html) {
 		scroll-behavior: smooth;
 	}
 
+	/* Scrollbar */
+	:global(::-webkit-scrollbar) {
+		width: 8px;
+	}
+	:global(::-webkit-scrollbar-track) {
+		background: var(--bg-depth);
+	}
+	:global(::-webkit-scrollbar-thumb) {
+		background: #1e293b;
+		border-radius: 4px;
+	}
+	:global(::-webkit-scrollbar-thumb:hover) {
+		background: #334155;
+	}
+
 	.app-shell {
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-		background: radial-gradient(120% 120% at 50% 0%, rgba(108, 121, 255, 0.16), transparent),
-			radial-gradient(100% 120% at 0% 100%, rgba(24, 209, 198, 0.14), transparent),
-			linear-gradient(180deg, #05070f 0%, #0d1125 100%);
+		position: relative;
+		z-index: 1;
 	}
 
 	.skip-link {
 		position: absolute;
 		top: -40px;
 		left: 12px;
-		z-index: 1000;
+		z-index: 2000;
 	}
 
 	.skip-link a {
 		display: inline-block;
-		background: rgba(12, 20, 40, 0.9);
-		color: #f8fbff;
+		background: var(--primary);
+		color: #000;
 		padding: 0.6rem 1rem;
-		border-radius: 999px;
-		font-size: 0.875rem;
-		font-weight: 600;
-		box-shadow: 0 8px 20px rgba(5, 7, 15, 0.35);
-		transform: translateY(-8px);
-		transition: transform 0.2s ease, opacity 0.2s ease;
-		opacity: 0;
+		border-radius: 4px;
+		font-weight: 700;
+		transform: translateY(-100%);
+		transition: transform 0.2s ease;
 	}
 
 	.skip-link a:focus {
-		transform: translateY(0);
-		opacity: 1;
+		transform: translateY(40px);
 	}
 
 	.language-switch {
@@ -184,36 +232,34 @@ let jsonLd: Record<string, unknown> | null = null;
 		top: 1.5rem;
 		right: 1.5rem;
 		display: inline-flex;
-		background: rgba(12, 16, 32, 0.72);
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
 		backdrop-filter: blur(12px);
 		border-radius: 999px;
 		padding: 0.25rem;
-		box-shadow: 0 12px 24px rgba(5, 7, 15, 0.4);
 		gap: 0.25rem;
 	}
 
 	.language-switch button {
 		background: transparent;
-		color: rgba(248, 251, 255, 0.72);
+		color: var(--text-muted);
 		border: none;
 		border-radius: 999px;
 		padding: 0.4rem 0.9rem;
 		font-size: 0.85rem;
 		font-weight: 600;
 		cursor: pointer;
-		transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+		transition: all 0.2s ease;
 	}
 
 	.language-switch button:hover {
-		color: #ffffff;
+		color: var(--text-main);
 	}
 
 	.language-switch button.active {
-		background: linear-gradient(135deg, #5066ff 0%, #32d9ff 100%);
-		color: #05070f;
-		box-shadow: 0 8px 16px rgba(50, 105, 255, 0.36);
-		transform: translateY(-1px);
+		background: rgba(255, 255, 255, 0.1);
+		color: var(--text-main);
+		box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
 	}
 
 	.page-surface {
@@ -228,11 +274,7 @@ let jsonLd: Record<string, unknown> | null = null;
 			right: 50%;
 			transform: translateX(50%);
 			bottom: 1.5rem;
-		}
-
-		.language-switch button {
-			padding: 0.4rem 0.75rem;
-			font-size: 0.8rem;
+			background: rgba(10, 15, 30, 0.85);
 		}
 	}
 </style>

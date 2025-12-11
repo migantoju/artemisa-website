@@ -1,105 +1,136 @@
 <script lang="ts">
-	import { spring } from 'svelte/motion';
-	import { onMount } from 'svelte';
-	import { t, type Dictionary } from '$lib/i18n';
+	import { onMount } from "svelte";
+	import { t, type Dictionary } from "$lib/i18n";
 
 	const tStore = t;
-
 	let dict: Dictionary | undefined;
 
-	const float = spring(0, {
-		stiffness: 0.08,
-		damping: 0.2
-	});
-
-	onMount(() => {
-		let frame: number;
-		const animate = () => {
-			const time = performance.now() / 1200;
-			float.set(Math.sin(time));
-			frame = requestAnimationFrame(animate);
-		};
-
-		animate();
-		return () => cancelAnimationFrame(frame);
-	});
-
 	$: dict = $tStore as Dictionary;
-	$: sefoneCard = dict?.products.cards.find((card) => card.name === 'Sefone');
-	$: minervaxCard = dict?.products.cards.find((card) => card.name === 'Minervax');
+	$: sefoneCard = dict?.products.cards.find((card) => card.name === "Sefone");
+	$: minervaxCard = dict?.products.cards.find(
+		(card) => card.name === "Minervax",
+	);
 	$: hero = dict?.hero;
+
+	let cardsContainer: HTMLElement;
+
+	function handleMouseMove(e: MouseEvent) {
+		if (!cardsContainer) return;
+		const cards = cardsContainer.querySelectorAll(".card");
+
+		cards.forEach((card) => {
+			const rect = card.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+
+			const centerX = rect.width / 2;
+			const centerY = rect.height / 2;
+
+			const rotateX = ((y - centerY) / centerY) * -5;
+			const rotateY = ((x - centerX) / centerX) * 5;
+
+			(card as HTMLElement).style.transform =
+				`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+		});
+	}
+
+	function handleMouseLeave() {
+		if (!cardsContainer) return;
+		const cards = cardsContainer.querySelectorAll(".card");
+		cards.forEach((card) => {
+			(card as HTMLElement).style.transform =
+				`perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+		});
+	}
 </script>
 
 {#if dict && hero && sefoneCard && minervaxCard}
 	<section class="hero" id="top" aria-labelledby="hero-title">
-		<div class="hero-background" aria-hidden="true">
-			<div class="glow primary" style={`--offset:${$float * 15}px`}></div>
-			<div class="glow secondary"></div>
-			<div class="gridlines"></div>
-		</div>
-
 		<div class="hero-content">
 			<div class="copy">
-				<p class="eyebrow">{hero.eyebrow}</p>
-				<h1 id="hero-title">{hero.title}</h1>
+				<div class="badge-wrapper">
+					<span class="eyebrow-badge">{hero.eyebrow}</span>
+				</div>
+				<h1 id="hero-title">
+					<span class="gradient-text">{hero.title}</span>
+				</h1>
 				<p class="subtitle">{hero.subtitle}</p>
 
 				<div class="actions">
-					<a href={hero.primaryHref} class="action primary">{hero.primaryCta}</a>
-					<a href={hero.secondaryHref} class="action secondary">{hero.secondaryCta}</a>
+					<a href={hero.primaryHref} class="action primary">
+						<span>{hero.primaryCta}</span>
+						<div class="shine" aria-hidden="true"></div>
+					</a>
+					<a href={hero.secondaryHref} class="action secondary"
+						>{hero.secondaryCta}</a
+					>
 				</div>
 
-				<div class="product-tags" aria-hidden="true">
-					<span>{hero.sefoneTagline}</span>
-					<span>{hero.minervaxTagline}</span>
+				<div class="stats">
+					<div class="stat-item">
+						<span class="stat-value">2+</span>
+						<span class="stat-label">Products</span>
+					</div>
+					<div class="divider"></div>
+					<div class="stat-item">
+						<span class="stat-value">100%</span>
+						<span class="stat-label">Innovation</span>
+					</div>
 				</div>
 			</div>
 
-			<div class="showcase" aria-label="Featured products">
+			<div
+				class="showcase"
+				bind:this={cardsContainer}
+				on:mousemove={handleMouseMove}
+				on:mouseleave={handleMouseLeave}
+				role="region"
+				aria-label="Featured products"
+			>
 				<article class="card available">
-					<div class="card-header">
-						<span class="badge">{hero.availableBadge}</span>
-						<h2>{sefoneCard.name}</h2>
-						<p>{hero.sefoneTagline}</p>
+					<div class="card-glow"></div>
+					<div class="card-content">
+						<div class="card-header">
+							<span class="status available"
+								>{hero.availableBadge}</span
+							>
+							<h2>{sefoneCard.name}</h2>
+						</div>
+						<p class="card-desc">{hero.sefoneTagline}</p>
+						<div class="card-image">
+							<img
+								src={sefoneCard.placeholder}
+								alt={sefoneCard.imageAlt}
+								loading="lazy"
+							/>
+						</div>
+						<a class="card-link" href={sefoneCard.href}>
+							{sefoneCard.ctaLabel}
+							<span aria-hidden="true">→</span>
+						</a>
 					</div>
-					<img
-						src={sefoneCard.placeholder}
-						alt={sefoneCard.imageAlt}
-						width="600"
-						height="400"
-						loading="lazy"
-					/>
-					<ul>
-						{#each sefoneCard.highlights as item}
-							<li>{item}</li>
-						{/each}
-					</ul>
-					<a class="card-link" href={sefoneCard.href}>
-						{sefoneCard.ctaLabel}
-					</a>
 				</article>
 
 				<article class="card wip">
-					<div class="card-header">
-						<span class="badge">{hero.wipBadge}</span>
-						<h2>{minervaxCard.name}</h2>
-						<p>{hero.minervaxTagline}</p>
+					<div class="card-glow"></div>
+					<div class="card-content">
+						<div class="card-header">
+							<span class="status wip">{hero.wipBadge}</span>
+							<h2>{minervaxCard.name}</h2>
+						</div>
+						<p class="card-desc">{hero.minervaxTagline}</p>
+						<div class="card-image">
+							<img
+								src={minervaxCard.placeholder}
+								alt={minervaxCard.imageAlt}
+								loading="lazy"
+							/>
+						</div>
+						<a class="card-link" href={minervaxCard.href}>
+							{minervaxCard.ctaLabel}
+							<span aria-hidden="true">→</span>
+						</a>
 					</div>
-					<img
-						src={minervaxCard.placeholder}
-						alt={minervaxCard.imageAlt}
-						width="600"
-						height="400"
-						loading="lazy"
-					/>
-					<ul>
-						{#each minervaxCard.highlights as item}
-							<li>{item}</li>
-						{/each}
-					</ul>
-					<a class="card-link" href={minervaxCard.href}>
-						{minervaxCard.ctaLabel}
-					</a>
 				</article>
 			</div>
 		</div>
@@ -109,319 +140,277 @@
 <style>
 	.hero {
 		position: relative;
-		padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(2.5rem, 4.5vw, 4.5rem);
-		overflow: hidden;
-	}
-
-	.hero-background {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-
-	.glow {
-		position: absolute;
-		width: 520px;
-		height: 520px;
-		border-radius: 50%;
-		filter: blur(80px);
-		opacity: 0.6;
-	}
-
-	.glow.primary {
-		top: -180px;
-		right: -160px;
-		background: radial-gradient(circle, rgba(84, 104, 255, 0.45), transparent 65%);
-		transform: translateY(var(--offset));
-		transition: transform 0.4s ease;
-	}
-
-	.glow.secondary {
-		bottom: -220px;
-		left: -160px;
-		background: radial-gradient(circle, rgba(60, 210, 255, 0.42), transparent 70%);
-	}
-
-	.gridlines {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-		background-size: 80px 80px;
-		mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.9), transparent 70%);
-		opacity: 0.4;
+		padding: clamp(6rem, 12vw, 8rem) 0 clamp(4rem, 8vw, 6rem);
+		overflow: visible;
 	}
 
 	.hero-content {
-		position: relative;
-		width: min(1180px, 92vw);
+		width: min(1280px, 92vw);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		gap: clamp(1.4rem, 2.6vw, 2.6rem);
-		align-items: start;
+		grid-template-columns: 1fr 1fr;
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: center;
 	}
 
 	.copy {
-		grid-column: span 6;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-		transform: translateY(-1rem);
+		gap: 1.5rem;
+		position: relative;
+		z-index: 2;
 	}
 
-	.eyebrow {
-		font-size: 0.95rem;
-		letter-spacing: 0.28em;
-		text-transform: uppercase;
-		color: rgba(184, 198, 255, 0.7);
+	.badge-wrapper {
+		display: flex;
+	}
+
+	.eyebrow-badge {
+		padding: 0.5rem 1rem;
+		border-radius: 999px;
+		background: rgba(0, 240, 255, 0.1);
+		border: 1px solid rgba(0, 240, 255, 0.2);
+		color: var(--primary);
+		font-size: 0.85rem;
 		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
 	}
 
 	h1 {
-		font-size: clamp(2.6rem, 5vw, 3.75rem);
-		line-height: 1.05;
-		margin: 0;
-		background: linear-gradient(135deg, #ffffff 0%, rgba(178, 199, 255, 0.85) 100%);
-		background-clip: text;
+		font-size: clamp(3rem, 6vw, 4.5rem);
+		font-weight: 800;
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.gradient-text {
+		background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
-		color: transparent;
+		background-clip: text;
 	}
 
 	.subtitle {
-		font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-		max-width: 32ch;
-		color: rgba(224, 231, 255, 0.82);
-		margin: 0;
+		font-size: clamp(1.1rem, 2vw, 1.25rem);
+		color: var(--text-muted);
+		max-width: 45ch;
+		line-height: 1.7;
 	}
 
 	.actions {
 		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
 		flex-wrap: wrap;
-		gap: 0.75rem;
 	}
 
 	.action {
+		position: relative;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.85rem 1.6rem;
-		border-radius: 999px;
+		padding: 0.9rem 2rem;
+		border-radius: 12px;
 		font-weight: 600;
-		font-size: 0.98rem;
-		transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+		font-size: 1rem;
+		transition: all 0.3s ease;
+		overflow: hidden;
 	}
 
 	.action.primary {
-		background: linear-gradient(135deg, #5464ff 0%, #32d9ff 100%);
-		color: #040611;
-		box-shadow: 0 18px 28px rgba(70, 110, 255, 0.35);
+		background: var(--primary);
+		color: #000;
+		box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
 	}
 
 	.action.primary:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 24px 32px rgba(86, 140, 255, 0.4);
+		box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+	}
+
+	.shine {
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 50%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.5),
+			transparent
+		);
+		transform: skewX(-20deg);
+		transition: 0.5s;
+	}
+
+	.action.primary:hover .shine {
+		left: 150%;
+		transition: 0.5s;
 	}
 
 	.action.secondary {
-		background: rgba(26, 36, 64, 0.6);
-		color: rgba(240, 243, 255, 0.85);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: var(--text-main);
+		backdrop-filter: blur(10px);
 	}
 
 	.action.secondary:hover {
-		transform: translateY(-2px);
-		background: rgba(34, 48, 90, 0.75);
+		background: rgba(255, 255, 255, 0.1);
+		border-color: var(--text-main);
 	}
 
-	.product-tags {
-		display: inline-flex;
-		gap: 0.75rem;
-		flex-wrap: wrap;
-		font-size: 0.9rem;
-		color: rgba(190, 203, 255, 0.65);
+	.stats {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		margin-top: 1rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
-	.product-tags span {
-		padding: 0.4rem 0.9rem;
-		border-radius: 999px;
-		background: rgba(32, 44, 86, 0.45);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		backdrop-filter: blur(12px);
+	.stat-item {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.stat-value {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--text-main);
+	}
+
+	.stat-label {
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.divider {
+		width: 1px;
+		height: 40px;
+		background: rgba(255, 255, 255, 0.1);
 	}
 
 	.showcase {
-		grid-column: span 6;
 		display: grid;
-		grid-template-columns: repeat(6, minmax(0, 1fr));
-		gap: 1.5rem;
+		gap: 2rem;
+		perspective: 1000px;
 	}
 
 	.card {
 		position: relative;
-		grid-column: span 6;
-		background: rgba(8, 12, 24, 0.72);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		border-radius: 28px;
-		padding: 1.8rem;
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 24px;
+		padding: 2px; /* For border gradient effect if needed */
+		transition: transform 0.1s ease-out;
+		transform-style: preserve-3d;
+	}
+
+	.card-content {
+		background: rgba(10, 15, 30, 0.6);
+		border-radius: 22px;
+		padding: 1.5rem;
 		display: flex;
 		flex-direction: column;
-		gap: 1.2rem;
-		overflow: hidden;
-		box-shadow: 0 24px 48px rgba(5, 7, 15, 0.55);
-		transform-style: preserve-3d;
-		transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-	}
-
-	.card.available {
-		transform: translateY(-12px) rotate3d(1, -1, 0, 5deg);
-	}
-
-	.card.wip {
-		transform: translateY(12px) rotate3d(1, 1, 0, 5deg);
-	}
-
-	.card:hover {
-		transform: translateY(-6px);
-		border-color: rgba(101, 251, 210, 0.4);
-		box-shadow: 0 28px 52px rgba(40, 62, 120, 0.6);
+		gap: 1rem;
+		backdrop-filter: blur(20px);
 	}
 
 	.card-header {
 		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	.card-header h2 {
-		margin: 0;
-		font-size: 1.6rem;
-		color: #ffffff;
+		font-size: 1.25rem;
+		color: var(--text-main);
 	}
 
-	.card-header p {
-		margin: 0;
-		font-size: 1rem;
-		color: rgba(220, 227, 255, 0.7);
-	}
-
-	.badge {
-		align-self: flex-start;
-		padding: 0.35rem 0.8rem;
-		border-radius: 999px;
-		font-size: 0.75rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+	.status {
+		font-size: 0.7rem;
 		font-weight: 700;
-		background: rgba(90, 208, 255, 0.18);
-		color: rgba(230, 240, 255, 0.8);
-		border: 1px solid rgba(90, 208, 255, 0.35);
+		padding: 0.25rem 0.75rem;
+		border-radius: 999px;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	.card.available .badge {
-		background: rgba(101, 251, 210, 0.2);
-		border-color: rgba(101, 251, 210, 0.4);
-		color: rgba(245, 255, 253, 0.85);
+	.status.available {
+		background: rgba(0, 240, 255, 0.15);
+		color: var(--primary);
+		border: 1px solid rgba(0, 240, 255, 0.3);
 	}
 
-	.card img {
+	.status.wip {
+		background: rgba(112, 0, 255, 0.15);
+		color: var(--secondary);
+		border: 1px solid rgba(112, 0, 255, 0.3);
+	}
+
+	.card-desc {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+	}
+
+	.card-image {
+		border-radius: 12px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.card-image img {
 		width: 100%;
 		height: auto;
-		border-radius: 18px;
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		display: block;
+		transition: transform 0.5s ease;
 	}
 
-	.card ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 0.65rem;
-		font-size: 0.95rem;
-		color: rgba(214, 225, 255, 0.75);
-	}
-
-	.card ul li {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.card ul li::before {
-		content: '';
-		width: 8px;
-		height: 8px;
-		border-radius: 2px;
-		background: linear-gradient(135deg, #65fbd2, #6a7dff);
+	.card:hover .card-image img {
+		transform: scale(1.05);
 	}
 
 	.card-link {
-		align-self: flex-start;
-		margin-top: auto;
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
+		gap: 0.5rem;
+		font-size: 0.9rem;
 		font-weight: 600;
-		color: #65fbd2;
+		color: var(--text-main);
+		margin-top: auto;
 	}
 
-	.card-link::after {
-		content: '↗';
-		font-size: 0.9rem;
+	.card-link:hover {
+		color: var(--primary);
 	}
 
 	@media (max-width: 1024px) {
 		.hero-content {
-			grid-template-columns: repeat(1, minmax(0, 1fr));
-		}
-
-		.copy,
-		.showcase {
-			grid-column: auto;
+			grid-template-columns: 1fr;
+			text-align: center;
 		}
 
 		.copy {
-			text-align: center;
 			align-items: center;
-			transform: translateY(0);
 		}
 
-		.subtitle {
-			max-width: 48ch;
+		.actions {
+			justify-content: center;
 		}
 
-		.product-tags {
+		.stats {
 			justify-content: center;
 		}
 
 		.showcase {
-			grid-template-columns: 1fr;
-		}
-
-		.card.available,
-		.card.wip {
-			transform: none;
-		}
-	}
-
-	@media (max-width: 640px) {
-		.hero {
-			padding-top: 4.5rem;
-			padding-bottom: 3rem;
-		}
-
-		.actions {
-			width: 100%;
-		}
-
-		.action {
-			flex: 1 1 auto;
-			text-align: center;
-		}
-
-		.card {
-			padding: 1.4rem;
+			max-width: 600px;
+			margin: 0 auto;
 		}
 	}
 </style>
